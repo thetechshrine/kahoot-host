@@ -31,10 +31,10 @@ const FormInput = (props) => {
   };
 
   const onInputChange = (evt) => {
-    const { value } = evt.target;
-    if (type === 'number') return onChange({ value: Number(value) });
+    const { name, value } = evt.target;
+    if (type === 'number') return onChange({ name, value: Number(value) });
 
-    return onChange({ value });
+    return onChange({ name, value });
   };
 
   return (
