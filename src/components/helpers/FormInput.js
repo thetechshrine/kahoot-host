@@ -4,7 +4,16 @@ import PropTypes from 'prop-types';
 import { v1 as uuid } from 'uuid';
 
 const FormInput = (props) => {
-  const { type, name, label, required, maxLength, className, onChange } = props;
+  const {
+    variant,
+    type,
+    name,
+    label,
+    required,
+    maxLength,
+    className,
+    onChange,
+  } = props;
   const id = uuid();
 
   const [length, setLength] = useState(0);
@@ -44,16 +53,30 @@ const FormInput = (props) => {
         {!required && <span>(optional)</span>}
       </label>
       <div className="input-container">
-        <input
-          type={type}
-          name={name}
-          id={id}
-          required={required}
-          className={`input ${className}`}
-          onChange={onInputChange}
-          onKeyDown={onKeyDown}
-          onKeyUp={onKeyUp}
-        />
+        {variant === 'input' ? (
+          <input
+            type={type}
+            name={name}
+            id={id}
+            required={required}
+            className={`input ${className}`}
+            onChange={onInputChange}
+            onKeyDown={onKeyDown}
+            onKeyUp={onKeyUp}
+          />
+        ) : (
+          <textarea
+            rows={5}
+            type={type}
+            name={name}
+            id={id}
+            required={required}
+            className={`input ${className}`}
+            onChange={onInputChange}
+            onKeyDown={onKeyDown}
+            onKeyUp={onKeyUp}
+          />
+        )}
         {maxLength > 0 && <span className="counter">{length}</span>}
       </div>
     </div>
@@ -61,6 +84,7 @@ const FormInput = (props) => {
 };
 
 FormInput.propTypes = {
+  variant: PropTypes.oneOf(['input', 'textarea', '']),
   type: PropTypes.oneOf(['number', 'text', 'password']),
   name: PropTypes.string,
   label: PropTypes.string.isRequired,
@@ -71,6 +95,7 @@ FormInput.propTypes = {
 };
 
 FormInput.defaultProps = {
+  variant: 'input',
   type: 'text',
   name: '',
   required: false,

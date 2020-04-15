@@ -4,9 +4,7 @@ import PropTypes from 'prop-types';
 
 import ImageButton from './ImageButton';
 
-const Notification = (props) => {
-  const { type, show, onHide } = props;
-
+const Notification = ({ type, show, onHide, message }) => {
   const [loaded, setLoaded] = useState(false);
   const [visible, setVisible] = useState(false);
   useEffect(() => {
@@ -28,7 +26,7 @@ const Notification = (props) => {
             <i className="material-icons">clear</i>
           </ImageButton>
         </header>
-        <section>{props.children}</section>
+        <section>{message}</section>
       </div>
     </div>,
     document.getElementById('notification')
@@ -36,15 +34,17 @@ const Notification = (props) => {
 };
 
 Notification.propTypes = {
-  type: PropTypes.oneOf(['success', 'info', 'error']),
+  type: PropTypes.oneOf(['success', 'info', 'error', '']),
   show: PropTypes.bool,
   onHide: PropTypes.func,
+  message: PropTypes.string,
 };
 
 Notification.defaultProps = {
   type: 'success',
   show: false,
   onHide: () => {},
+  message: '',
 };
 
 export default Notification;

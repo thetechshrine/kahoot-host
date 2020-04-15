@@ -1,0 +1,42 @@
+import React from 'react';
+import PropTypes from 'prop-types';
+
+import Modal from './Modal';
+import Button from './Button';
+
+const ActionModal = (props) => {
+  const { size, show, onHide, title, onDone, className } = props;
+
+  return (
+    <Modal size={size} show={show} onHide={onHide}>
+      <div className={`action-modal-body ${className}`}>
+        <header>
+          <h5 className="title">{title}</h5>
+        </header>
+        <main>{props.children}</main>
+        <footer>
+          <Button onClick={onHide}>Cancel</Button>
+          <Button variant="four" onClick={onDone}>
+            Done
+          </Button>
+        </footer>
+      </div>
+    </Modal>
+  );
+};
+
+ActionModal.propTypes = {
+  size: PropTypes.oneOf(['small', 'normal', '']),
+  show: PropTypes.bool.isRequired,
+  onHide: PropTypes.func.isRequired,
+  title: PropTypes.string.isRequired,
+  onDone: PropTypes.func.isRequired,
+  className: PropTypes.string,
+};
+
+ActionModal.defaultProps = {
+  size: 'normal',
+  className: '',
+};
+
+export default ActionModal;

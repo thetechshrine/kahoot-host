@@ -7,7 +7,7 @@ import Badge from './Badge';
 
 import history from '../../helpers/history';
 
-const HomeNavbar = () => {
+const HomeNavbar = ({ onCreate }) => {
   return (
     <div className="navbar-home">
       <div className="menu">
@@ -21,14 +21,14 @@ const HomeNavbar = () => {
           </li>
           <li>
             <NavLink to="/home/reports">
-              <span class="material-icons">bar_chart</span>
+              <span className="material-icons">bar_chart</span>
               Reports
             </NavLink>
           </li>
         </ul>
       </div>
       <div className="actions">
-        <Button onClick={() => history.push('/creator')}>Create</Button>
+        <Button onClick={onCreate}>Create</Button>
       </div>
     </div>
   );
@@ -64,12 +64,14 @@ const AuthNavBar = () => {
 
 const CreatorNavbar = () => {
   return (
-    <div className="navbar-home creator">
+    <div className="navbar-home navbar-creator">
       <div className="menu">
         <h2 className="logo">Kahoot!</h2>
         <div className="edit">
           <span>Enter kahoot title...</span>
-          <Badge>Edit</Badge>
+          <Badge>
+            <i className="fas fa-cog"></i>
+          </Badge>
         </div>
       </div>
       <div className="actions">
@@ -82,9 +84,7 @@ const CreatorNavbar = () => {
   );
 };
 
-const Navbar = (props) => {
-  const { type } = props;
-
+const Navbar = ({ type, onCreate }) => {
   let navbar;
   switch (type) {
     case 'auth':
@@ -97,13 +97,13 @@ const Navbar = (props) => {
     case 'home':
       navbar = (
         <div className="navbar navbar-home-container">
-          <HomeNavbar />
+          <HomeNavbar onCreate={onCreate} />
         </div>
       );
       break;
     case 'creator':
       navbar = (
-        <div className="navbar navbar-home-container creator">
+        <div className="navbar navbar-home-container">
           <CreatorNavbar />
         </div>
       );
@@ -116,11 +116,13 @@ const Navbar = (props) => {
 };
 
 Navbar.propTypes = {
-  type: PropTypes.oneOf(['auth', 'home']),
+  type: PropTypes.oneOf(['auth', 'home', 'creator']),
+  onCreate: PropTypes.func,
 };
 
 Navbar.defaultProps = {
   type: 'auth',
+  onCreate: () => {},
 };
 
 export default Navbar;

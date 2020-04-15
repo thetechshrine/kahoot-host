@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import FormInput from '../../helpers/FormInput';
 import Button from '../../helpers/Button';
 
-const Register = ({ valid, onChange, onSubmit }) => {
+const Register = ({ valid, loading, onChange, onSubmit }) => {
   return (
     <div className="auth-form-container">
       <div className="auth-form-inner-container">
@@ -53,7 +53,7 @@ const Register = ({ valid, onChange, onSubmit }) => {
             type="submit"
             variant="one"
             className="fluid"
-            disabled={!valid}
+            disabled={!valid || loading}
           >
             Register
           </Button>
@@ -65,6 +65,7 @@ const Register = ({ valid, onChange, onSubmit }) => {
 
 Register.propTypes = {
   valid: PropTypes.bool,
+  loading: PropTypes.bool.isRequired,
   onChange: PropTypes.func.isRequired,
   onSubmit: PropTypes.func.isRequired,
 };

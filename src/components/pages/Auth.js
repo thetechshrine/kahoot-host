@@ -1,5 +1,10 @@
 import React, { Component } from 'react';
 import { Switch, Router, Route, Redirect } from 'react-router-dom';
+import { connect } from 'react-redux';
+import PropTypes from 'prop-types';
+
+import notificationActions from '../../store/actions/notification';
+import authActions from '../../store/actions/auth';
 
 import Navbar from '../helpers/Navbar';
 
@@ -50,14 +55,43 @@ class Auth extends Component {
 
   login = (evt) => {
     evt.preventDefault();
+
+    const { valid, ...credentials } = this.state.login;
+    const { signIn } = this.props;
+
+    signIn({ credentials });
   };
 
   register = (evt) => {
     evt.preventDefault();
+
+    const { notify, signUp } = this.props;
+    const { register } = this.state;
+
+    const { password, confirmPassword } = register;
+    if (password !== confirmPassword) {
+      notify({
+        type: 'error',
+        message: 'Passwords does not match',
+      });
+      return;
+    }
+
+    const { lastName, firstName, username } = register;
+
+    signUp({
+      user: {
+        lastName,
+        firstName,
+        username,
+        password,
+      },
+    });
   };
 
   render() {
     const { login, register } = this.state;
+    const { loading } = this.props;
 
     return (
       <div className="auth">
@@ -74,6 +108,7 @@ class Auth extends Component {
               render={() => (
                 <Login
                   valid={login.valid}
+                  loading={loading}
                   onChange={this.onChange}
                   onSubmit={this.login}
                 />
@@ -84,6 +119,7 @@ class Auth extends Component {
               render={() => (
                 <Register
                   valid={register.valid}
+                  loading={loading}
                   onChange={this.onChange}
                   onSubmit={this.register}
                 />
@@ -96,4 +132,29 @@ class Auth extends Component {
   }
 }
 
-export default Auth;
+Auth.propTypes = {
+  loading: PropTypes.bool,
+  notify: PropTypes.func.isRequired,
+  closeNotification: PropTypes.func.isRequired,
+  signIn: PropTypes.func.isRequired,
+  signUp: PropTypes.func.isRequired,
+};
+
+Auth.defaultProps = {
+  loading: false,
+};
+
+const mapStateToProps = (state) => {
+  return {
+    loading: state.core.auth.loading,
+  };
+};
+
+const actions = {
+  notify: notificationActions.notify,
+  closeNotification: notificationActions.closeNotification,
+  signUp: authActions.signUp,
+  signIn: authActions.signIn,
+};
+
+export default connect(mapStateToProps, actions)(Auth);
