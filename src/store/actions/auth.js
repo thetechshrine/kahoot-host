@@ -5,6 +5,9 @@ import {
   SIGN_IN_REQUEST,
   SIGN_IN_SUCCESS,
   SIGN_IN_FAILURE,
+  PROFILE_REQUEST,
+  PROFILE_SUCCESS,
+  PROFILE_FAILURE,
 } from '../types/auth';
 import authService from '../services/auth';
 
@@ -65,9 +68,27 @@ const signIn = ({ credentials }) => (dispatch) => {
     });
 };
 
+const profile = () => (dispatch) => {
+  dispatch({ type: PROFILE_REQUEST });
+
+  authService
+    .profile()
+    .then((response) => {
+      const { data } = response;
+      dispatch({ type: PROFILE_SUCCESS, payload: { user: data } });
+    })
+    .catch((error) => {
+      if (error.response) {
+        const { data } = error.response;
+        dispatch({ type: PROFILE_FAILURE, payload: { error: data } });
+      }
+    });
+};
+
 const actions = {
   signUp,
   signIn,
+  profile,
 };
 
 export default actions;

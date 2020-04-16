@@ -20,9 +20,12 @@ const signIn = async (credentials) => {
   return httpClient.post('/auth/signin', credentials, configs);
 };
 
+const profile = async () => httpClient.get('/users/profile');
+
 const service = {
   signUp,
   signIn,
+  profile,
 };
 
 export default service;
