@@ -5,6 +5,7 @@ const createGame = async (formData) => {
   const configs = {
     headers: {
       'Content-Type': 'multipart/form-data',
+      Authorization: `Bearer ${storage.getToken()}`,
     },
   };
 
@@ -19,9 +20,19 @@ const getGames = async () => {
   });
 };
 
-const getGame = async (gameId) => httpClient.get(`/games/${gameId}`);
+const getGame = async (gameId) =>
+  httpClient.get(`/games/${gameId}`, {
+    headers: {
+      Authorization: `Bearer ${storage.getToken()}`,
+    },
+  });
 
-const deleteGame = async (gameId) => httpClient.delete(`/games/${gameId}`);
+const deleteGame = async (gameId) =>
+  httpClient.delete(`/games/${gameId}`, {
+    headers: {
+      Authorization: `Bearer ${storage.getToken()}`,
+    },
+  });
 
 const service = {
   createGame,

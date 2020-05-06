@@ -3,7 +3,7 @@ import axios from 'axios';
 import storage from '../helpers/storage';
 
 const httpClient = axios.create({
-  baseURL: 'http://localhost:5000/api/v1',
+  baseURL: process.env.REACT_APP_HTTP_BASE_URL,
 });
 
 if (storage.isAuthenticate()) {

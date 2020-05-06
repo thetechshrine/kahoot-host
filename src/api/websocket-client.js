@@ -1,1 +1,1 @@
-export const WS_BASE = 'http://localhost:5000/hosts';
+export const WS_BASE = process.env.REACT_APP_WS_BASE_URL;

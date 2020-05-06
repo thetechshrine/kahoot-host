@@ -55,7 +55,11 @@ const signIn = ({ credentials }) => (dispatch) => {
       storage.setToken(data);
 
       // navigate
+
       history.push('/');
+      setTimeout(() => {
+        window.location.reload();
+      }, 20);
     })
     .catch((error) => {
       if (error.response) {
