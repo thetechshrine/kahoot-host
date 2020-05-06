@@ -13,9 +13,10 @@ import Reports from '../core/games/Reports';
 import GameModal from '../core/games/GameModal';
 
 import Navbar from '../helpers/Navbar';
+import ImageButton from '../helpers/ImageButton';
 
 import history from '../../helpers/history';
-import ImageButton from '../helpers/ImageButton';
+import storage from '../../helpers/storage';
 
 class Home extends Component {
   state = {
@@ -77,6 +78,11 @@ class Home extends Component {
     this.toggleCreateGameModal();
   };
 
+  logout = () => {
+    storage.clearAll();
+    history.push('/auth');
+  };
+
   render() {
     const { createGameModalVisible } = this.state;
     const { user } = this.props;
@@ -100,7 +106,7 @@ class Home extends Component {
               )}
             </div>
             <div className="actions">
-              <ImageButton type="one">
+              <ImageButton type="one" onClick={this.logout}>
                 <i className="fas fa-sign-out-alt"></i>
                 Logout
               </ImageButton>

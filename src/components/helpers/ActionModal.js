@@ -5,7 +5,16 @@ import Modal from './Modal';
 import Button from './Button';
 
 const ActionModal = (props) => {
-  const { size, show, onHide, title, onDone, className } = props;
+  const {
+    size,
+    show,
+    onHide,
+    title,
+    onDone,
+    doneButtonVariant,
+    doneButtonText,
+    className,
+  } = props;
 
   return (
     <Modal size={size} show={show} onHide={onHide}>
@@ -16,8 +25,8 @@ const ActionModal = (props) => {
         <main>{props.children}</main>
         <footer>
           <Button onClick={onHide}>Cancel</Button>
-          <Button variant="four" onClick={onDone}>
-            Done
+          <Button variant={doneButtonVariant} onClick={onDone}>
+            {doneButtonText}
           </Button>
         </footer>
       </div>
@@ -31,11 +40,15 @@ ActionModal.propTypes = {
   onHide: PropTypes.func.isRequired,
   title: PropTypes.string.isRequired,
   onDone: PropTypes.func.isRequired,
+  doneButtonVariant: PropTypes.string,
+  doneButtonText: PropTypes.string,
   className: PropTypes.string,
 };
 
 ActionModal.defaultProps = {
   size: 'normal',
+  doneButtonVariant: 'four',
+  doneButtonText: 'Done',
   className: '',
 };
 

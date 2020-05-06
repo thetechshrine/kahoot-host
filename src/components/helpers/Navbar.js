@@ -62,7 +62,7 @@ const AuthNavBar = () => {
   );
 };
 
-const CreatorNavbar = () => {
+const CreatorNavbar = ({ doneButtonDisabled, onDone, onExit }) => {
   return (
     <div className="navbar-home navbar-creator">
       <div className="menu">
@@ -75,16 +75,18 @@ const CreatorNavbar = () => {
         </div>
       </div>
       <div className="actions">
-        <Button variant="six" className="mr-0">
+        <Button variant="six" className="mr-0" onClick={onExit}>
           Exit
         </Button>
-        <Button variant="four">Done</Button>
+        <Button variant="four" onClick={onDone} disabled={doneButtonDisabled}>
+          Done
+        </Button>
       </div>
     </div>
   );
 };
 
-const Navbar = ({ type, onCreate }) => {
+const Navbar = ({ type, doneButtonDisabled, onCreate, onDone, onExit }) => {
   let navbar;
   switch (type) {
     case 'auth':
@@ -104,7 +106,11 @@ const Navbar = ({ type, onCreate }) => {
     case 'creator':
       navbar = (
         <div className="navbar navbar-home-container">
-          <CreatorNavbar />
+          <CreatorNavbar
+            doneButtonDisabled={doneButtonDisabled}
+            onDone={onDone}
+            onExit={onExit}
+          />
         </div>
       );
       break;
@@ -118,11 +124,17 @@ const Navbar = ({ type, onCreate }) => {
 Navbar.propTypes = {
   type: PropTypes.oneOf(['auth', 'home', 'creator']),
   onCreate: PropTypes.func,
+  doneButtonDisabled: PropTypes.bool,
+  onDone: PropTypes.func,
+  onExit: PropTypes.func,
 };
 
 Navbar.defaultProps = {
   type: 'auth',
+  doneButtonDisabled: false,
   onCreate: () => {},
+  onDone: () => {},
+  onExit: () => {},
 };
 
 export default Navbar;

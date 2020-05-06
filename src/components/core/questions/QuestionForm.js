@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import PropTypes from 'prop-types';
 
 import { v1 as uuid } from 'uuid';
 
@@ -15,12 +16,12 @@ const timeLimits = [
 ];
 
 const points = [
-  { key: uuid(), value: '0' },
+  { key: uuid(), value: '500' },
   { key: uuid(), value: '1000' },
   { key: uuid(), value: '2000' },
 ];
 
-const QuestionForm = () => {
+const QuestionForm = ({ activeQuestion, onChange }) => {
   const dropZoneId = uuid();
 
   const [timeModalVisible, setTimeModalVisible] = useState(false);
@@ -30,9 +31,12 @@ const QuestionForm = () => {
     <div className="question-form">
       <section className="title-container">
         <input
+          name="title"
           type="text"
           className="title"
           placeholder="Click to start typing your question"
+          onChange={(evt) => onChange(evt.target)}
+          value={activeQuestion.title || ''}
         />
       </section>
 
@@ -45,7 +49,7 @@ const QuestionForm = () => {
                 className="prop-button time"
                 onClick={() => setTimeModalVisible(true)}
               >
-                10 sec
+                {activeQuestion.time} sec
               </button>
             </div>
             <div className="prop-container points">
@@ -54,21 +58,67 @@ const QuestionForm = () => {
                 className="prop-button"
                 onClick={() => setPointsModalVisible(true)}
               >
-                1000
+                {activeQuestion.points}
               </button>
             </div>
           </div>
           <div className="image-container">
-            <DropZone id={dropZoneId} />
+            <DropZone
+              id={dropZoneId}
+              initValue={activeQuestion.file || activeQuestion.image}
+              onFileChange={({ file, deleted }) =>
+                onChange({ name: 'file', value: deleted ? null : file })
+              }
+            />
           </div>
           <div></div>
         </div>
 
         <div className="answers-container">
-          <AnswerInput type="two" placeHolder="Add answer 1" />
-          <AnswerInput type="one" placeHolder="Add answer 2" />
-          <AnswerInput type="three" placeHolder="Add answer 3 (optional)" />
-          <AnswerInput type="four" placeHolder="Add answer 4 (optional)" />
+          <AnswerInput
+            name="answer-1"
+            type="two"
+            placeHolder="Add answer 1"
+            onChange={onChange}
+            answer={
+              activeQuestion.answers
+                ? activeQuestion.answers.find((answer) => answer.position === 1)
+                : {}
+            }
+          />
+          <AnswerInput
+            name="answer-2"
+            type="one"
+            placeHolder="Add answer 2"
+            onChange={onChange}
+            answer={
+              activeQuestion.answers
+                ? activeQuestion.answers.find((answer) => answer.position === 2)
+                : {}
+            }
+          />
+          <AnswerInput
+            name="answer-3"
+            type="three"
+            placeHolder="Add answer 3 (optional)"
+            onChange={onChange}
+            answer={
+              activeQuestion.answers
+                ? activeQuestion.answers.find((answer) => answer.position === 3)
+                : {}
+            }
+          />
+          <AnswerInput
+            name="answer-4"
+            type="four"
+            placeHolder="Add answer 4 (optional)"
+            onChange={onChange}
+            answer={
+              activeQuestion.answers
+                ? activeQuestion.answers.find((answer) => answer.position === 4)
+                : {}
+            }
+          />
         </div>
       </section>
 
@@ -77,7 +127,9 @@ const QuestionForm = () => {
         onHide={() => setTimeModalVisible(false)}
         title="Time limit"
         choices={timeLimits}
-        onDone={({ choice }) => console.log(choice)}
+        onDone={({ choice }) =>
+          onChange({ name: 'time', value: Number(choice.value.split(' ')[0]) })
+        }
       />
 
       <PropsModal
@@ -85,10 +137,28 @@ const QuestionForm = () => {
         onHide={() => setPointsModalVisible(false)}
         title="Points"
         choices={points}
-        onDone={({ choice }) => console.log(choice)}
+        onDone={({ choice }) =>
+          onChange({ name: 'points', value: Number(choice.value) })
+        }
       />
     </div>
   );
+};
+
+QuestionForm.propTypes = {
+  onChange: PropTypes.func.isRequired,
+  activeQuestion: PropTypes.shape({
+    title: PropTypes.string,
+    time: PropTypes.number,
+    points: PropTypes.number,
+    file: PropTypes.shape({}),
+    answers: PropTypes.arrayOf(
+      PropTypes.shape({
+        title: PropTypes.string,
+        isCorrect: PropTypes.bool,
+      })
+    ),
+  }),
 };
 
 export default QuestionForm;

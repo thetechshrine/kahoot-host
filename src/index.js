@@ -6,6 +6,8 @@ import { createStore, applyMiddleware, compose } from 'redux';
 import reduxThunk from 'redux-thunk';
 import reduxLogger from 'redux-logger';
 
+import WebSocketProvider from './components/providers/WebSocket';
+
 import './index.css';
 import App from './components/App';
 import reducers from './store/reducers';
@@ -19,7 +21,9 @@ const store = createStore(
 ReactDOM.render(
   <Provider store={store}>
     <React.StrictMode>
-      <App />
+      <WebSocketProvider>
+        <App />
+      </WebSocketProvider>
     </React.StrictMode>
   </Provider>,
   document.getElementById('root')

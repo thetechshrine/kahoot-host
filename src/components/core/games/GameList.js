@@ -6,7 +6,7 @@ import ImageButton from '../../helpers/ImageButton';
 
 import cover from '../../../assets/img/cover.png';
 
-const GameItem = ({ game }) => {
+const GameItem = ({ game, onGameDeleted }) => {
   return (
     <Card>
       <div className="game-item">
@@ -19,14 +19,20 @@ const GameItem = ({ game }) => {
           <div className="top">
             <div>
               <p>{game.title}</p>
-              <ImageButton type="one">
+              <ImageButton type="one" onClick={() => onGameDeleted(game)}>
                 <span className="material-icons">delete</span>
               </ImageButton>
             </div>
             <p>Created 3 days ago</p>
           </div>
           <div className="bottom">
-            <button>Play</button>
+            <button
+              onClick={() =>
+                window.open(`/lobby?gameId=${game.uuid}`, '_blank')
+              }
+            >
+              Play
+            </button>
           </div>
         </div>
       </div>
@@ -34,12 +40,23 @@ const GameItem = ({ game }) => {
   );
 };
 
-const GameList = ({ games, onClick }) => {
+const GameList = ({ games, onGameSelected, onGameDeleted }) => {
+  const onClick = (evt, game) => {
+    const { nodeName } = evt.target;
+    if (game && nodeName !== 'BUTTON' && nodeName !== 'SPAN') {
+      onGameSelected(game);
+    }
+  };
+
   return (
     <ul className="game-list">
       {games.map((game) => (
-        <li key={game.uuid}>
-          <GameItem game={game} />
+        <li
+          key={game.uuid}
+          id={game.uuid}
+          onClick={(evt) => onClick(evt, game)}
+        >
+          <GameItem game={game} onGameDeleted={onGameDeleted} />
         </li>
       ))}
     </ul>
@@ -52,12 +69,12 @@ GameList.propTypes = {
       uuid: PropTypes.string,
     })
   ),
-  onClick: PropTypes.func,
+  onGameSelected: PropTypes.func.isRequired,
+  onGameDeleted: PropTypes.func.isRequired,
 };
 
 GameList.defaultProps = {
   games: [],
-  onClick: () => {},
 };
 
 export default GameList;

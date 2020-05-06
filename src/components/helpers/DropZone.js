@@ -4,8 +4,9 @@ import PropTypes from 'prop-types';
 import { v1 as uuid } from 'uuid';
 
 import Button from './Button';
+import { useEffect } from 'react';
 
-const DropZone = ({ id, types, onFileChange }) => {
+const DropZone = ({ id, types, initValue, onFileChange }) => {
   const inputId = id || uuid();
   const deleteButtonId = uuid();
 
@@ -17,20 +18,23 @@ const DropZone = ({ id, types, onFileChange }) => {
     evt.stopPropagation();
   };
 
+  const loadFile = (file) => {
+    const reader = new FileReader();
+    reader.addEventListener(
+      'load',
+      () => {
+        setSrc(reader.result);
+      },
+      false
+    );
+    reader.readAsDataURL(file);
+  };
+
   const dispactchEvent = (files) => {
     if (files && files.length > 0) {
       const file = files[0];
       if (file instanceof File && file.type.includes('image')) {
-        const reader = new FileReader();
-        reader.addEventListener(
-          'load',
-          () => {
-            setSrc(reader.result);
-          },
-          false
-        );
-        reader.readAsDataURL(file);
-
+        loadFile(file);
         // dispatch event
         onFileChange({ file, deleted: false });
       }
@@ -73,6 +77,17 @@ const DropZone = ({ id, types, onFileChange }) => {
     }
   };
 
+  useEffect(() => {
+    setSrc(initValue);
+    if (initValue) {
+      if (typeof initValue === 'string') {
+        setSrc(initValue);
+      } else if (initValue instanceof File) {
+        loadFile(initValue);
+      }
+    }
+  }, [initValue]);
+
   return (
     <div
       className="dropzone"
@@ -114,11 +129,13 @@ const DropZone = ({ id, types, onFileChange }) => {
 DropZone.propTypes = {
   id: PropTypes.string,
   type: PropTypes.arrayOf(PropTypes.string),
+  initValue: PropTypes.oneOfType([PropTypes.string, PropTypes.shape({})]),
   onFileChange: PropTypes.func,
 };
 
 DropZone.defaultProps = {
   id: '',
+  initValue: null,
   onFileChange: () => {},
 };
 
