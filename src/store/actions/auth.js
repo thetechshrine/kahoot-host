@@ -57,9 +57,6 @@ const signIn = ({ credentials }) => (dispatch) => {
       // navigate
 
       history.push('/');
-      setTimeout(() => {
-        window.location.reload();
-      }, 20);
     })
     .catch((error) => {
       if (error.response) {
