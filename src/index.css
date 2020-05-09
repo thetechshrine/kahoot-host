@@ -655,6 +655,11 @@ input[type='number'] {
 }
 
 .dropzone .input-file-label>span {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
   font-size: 15px;
 }
 
